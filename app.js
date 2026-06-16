@@ -44,7 +44,11 @@ app.post('/login',async (req,res)=>{
     let user=await userModel.findOne({email:req.body.email});
     if(!user) return res.send("Something is Wrong"); 
    bcrypt.compare(req.body.password,user.password,(err,result)=>{
-    if(result) res.send(`Welcome ${user.username}`);
+    if(result){
+        let tokenn=jwt.sign({email:user.email},"secret");
+            res.cookie("token",tokenn);
+         res.send(`Welcome ${user.username}`);
+    }
     else res.send("Oops! Incorrect Password");
    })
 })
