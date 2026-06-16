@@ -28,9 +28,17 @@ app.post('/create',(req,res)=>{
                 password:hash,
                 age
             });
+
+            let tokenn=jwt.sign({email:email},"secret");
+            res.cookie("token",tokenn);
             res.send(createdUser)
+            
         })
     })
+})
+app.get('/logout',(req,res)=>{
+    res.cookie("token","");
+    res.redirect('/');
 })
 app.listen(3000,()=>{
     console.log("Running on port 3000");
