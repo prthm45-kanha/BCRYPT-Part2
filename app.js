@@ -36,6 +36,18 @@ app.post('/create',(req,res)=>{
         })
     })
 })
+
+app.get('/login',(req,res)=>{
+    res.render('login');
+})
+app.post('/login',async (req,res)=>{
+    let user=await userModel.findOne({email:req.body.email});
+    if(!user) return res.send("Something is Wrong"); 
+   bcrypt.compare(req.body.password,user.password,(err,result)=>{
+    if(result) res.send(`Welcome ${user.username}`);
+    else res.send("Oops! Incorrect Password");
+   })
+})
 app.get('/logout',(req,res)=>{
     res.cookie("token","");
     res.redirect('/');
